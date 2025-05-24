@@ -1,0 +1,36 @@
+[package]
+name = "advent-of-code"
+version = "0.1.0"
+edition = "2024"
+
+[lints.clippy]
+pedantic = { level = "warn", priority = -1 }
+missing_panics_doc = { level = "allow", priority = 1 }
+
+[[bin]]
+name = "day-1-1"
+path = "days/1.1.rs"
+
+[[bin]]
+name = "day-1-2"
+path = "days/1.2.rs"
+
+[[bin]]
+name = "day-2-1"
+path = "days/2.1.rs"
+
+[[bin]]
+name = "day-2-2"
+path = "days/2.2.rs"
+
+[[bin]]
+name = "day-3-1"
+path = "days/3.1.rs"
+
+[[bin]]
+name = "day-3-2"
+path = "days/3.2.rs"
+
+[[bin]]
+name = "day-4-1"
+path = "days/4.1.rs"

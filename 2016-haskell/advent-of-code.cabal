@@ -1,0 +1,42 @@
+cabal-version: 3.14
+name: advent-of-code
+version: 0.1.0.0
+build-type: Simple
+
+common warnings
+  ghc-options:
+    -Wall
+    -Wredundant-constraints
+    -Wunused-packages
+    -Wno-name-shadowing
+
+common language
+  default-language:
+    GHC2024
+
+  default-extensions:
+    BlockArguments
+    OverloadedStrings
+    PatternSynonyms
+    RecordWildCards
+
+common depends
+  build-depends:
+    base ^>=4.21.0.0,
+    text ^>=2.1.2,
+
+common day
+  hs-source-dirs: days
+  build-depends: advent-of-code
+
+library
+  import: warnings, language, depends
+  hs-source-dirs: src
+  exposed-modules:
+    AdventOfCode
+    Data.Maybe.Extra
+
+executable day-1
+  import: warnings, language, depends, day
+  main-is: Day1.hs
+  build-depends: advent-of-code
