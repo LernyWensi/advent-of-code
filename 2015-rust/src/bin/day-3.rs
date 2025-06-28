@@ -44,10 +44,7 @@ impl Position {
 
 #[allow(clippy::needless_pass_by_value)]
 fn parse(input: String) -> Vec<Direction> {
-    input
-        .chars()
-        .map(Direction::from)
-        .collect::<Vec<Direction>>()
+    input.chars().map(Direction::from).collect()
 }
 
 #[allow(clippy::needless_pass_by_value)]
