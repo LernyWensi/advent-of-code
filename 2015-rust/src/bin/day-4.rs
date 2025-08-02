@@ -119,7 +119,7 @@ impl Md5 {
 
 #[allow(clippy::needless_pass_by_value)]
 fn parse(input: String) -> impl Fn(u32) -> String + Clone {
-    move |number| [input.clone(), number.to_string()].concat()
+    move |number| format!("{input}{number}")
 }
 
 #[allow(clippy::needless_pass_by_value)]
@@ -133,7 +133,7 @@ fn first(input: impl Fn(u32) -> String + 'static) -> u32 {
 fn second(input: impl Fn(u32) -> String + 'static) -> u32 {
     (0..u32::MAX)
         .find(|&index| Md5::from_str(&input(index)).hash().starts_with("000000"))
-        .expect("No input results in a hash with a prefix of '00000' (5 zeros)")
+        .expect("No input results in a hash with a prefix of '000000' (6 zeros)")
 }
 
 fn main() {

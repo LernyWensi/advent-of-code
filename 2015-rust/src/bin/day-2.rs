@@ -9,7 +9,7 @@ impl From<&str> for Dimensions {
     fn from(line: &str) -> Self {
         let [length, width, height] = line
             .split('x')
-            .map(|value| str::parse(value).expect("Failed to parse dimension value"))
+            .map(|value| str::parse(value).expect("Failed to parse the dimension value"))
             .collect::<Vec<u32>>()[..]
         else {
             panic!("Input string must be in the format 'LENGTHxWIDTHxHEIGHT'");
