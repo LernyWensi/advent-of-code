@@ -42,17 +42,15 @@ impl Position {
     }
 }
 
-#[allow(clippy::needless_pass_by_value)]
-fn parse(input: String) -> Vec<Direction> {
+fn parse(input: &str) -> Vec<Direction> {
     input.chars().map(Direction::from).collect()
 }
 
-#[allow(clippy::needless_pass_by_value)]
-fn first(input: Vec<Direction>) -> usize {
+fn first(input: &[Direction]) -> usize {
     let mut position = Position::default();
     let mut visited = HashSet::<Position>::from([position]);
 
-    for direction in &input {
+    for direction in input {
         position.move_in_direction(direction);
         visited.insert(position);
     }
@@ -60,13 +58,12 @@ fn first(input: Vec<Direction>) -> usize {
     visited.len()
 }
 
-#[allow(clippy::needless_pass_by_value)]
-fn second(input: Vec<Direction>) -> usize {
+fn second(input: &[Direction]) -> usize {
     let mut turn_flag = true;
     let mut positions = (Position::default(), Position::default());
     let mut visited = HashSet::<Position>::from([Position::default()]);
 
-    for direction in &input {
+    for direction in input {
         if turn_flag {
             positions.0.move_in_direction(direction);
             visited.insert(positions.0);
@@ -89,25 +86,15 @@ fn main() {
 mod tests {
     #[test]
     fn first() {
-        let parsed = super::parse(">".to_owned());
-        assert_eq!(super::first(parsed), 2);
-
-        let parsed = super::parse("^>v<".to_owned());
-        assert_eq!(super::first(parsed), 4);
-
-        let parsed = super::parse("^v^v^v^v^v".to_owned());
-        assert_eq!(super::first(parsed), 2);
+        advent_of_code::assert_first!(">", 2);
+        advent_of_code::assert_first!("^>v<", 4);
+        advent_of_code::assert_first!("^v^v^v^v^v", 2);
     }
 
     #[test]
     fn second() {
-        let parsed = super::parse("^v".to_owned());
-        assert_eq!(super::second(parsed), 3);
-
-        let parsed = super::parse("^>v<".to_owned());
-        assert_eq!(super::second(parsed), 3);
-
-        let parsed = super::parse("^v^v^v^v^v".to_owned());
-        assert_eq!(super::second(parsed), 11);
+        advent_of_code::assert_second!("^v", 3);
+        advent_of_code::assert_second!("^>v<", 3);
+        advent_of_code::assert_second!("^v^v^v^v^v", 11);
     }
 }

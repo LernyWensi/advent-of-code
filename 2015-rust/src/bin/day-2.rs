@@ -23,13 +23,11 @@ impl From<&str> for Dimensions {
     }
 }
 
-#[allow(clippy::needless_pass_by_value)]
-fn parse(input: String) -> Vec<Dimensions> {
+fn parse(input: &str) -> Vec<Dimensions> {
     input.lines().map(Dimensions::from).collect()
 }
 
-#[allow(clippy::needless_pass_by_value)]
-fn first(input: Vec<Dimensions>) -> u32 {
+fn first(input: &[Dimensions]) -> u32 {
     input.iter().fold(0, |total, dimensions| {
         let Dimensions {
             length,
@@ -52,8 +50,7 @@ fn first(input: Vec<Dimensions>) -> u32 {
     })
 }
 
-#[allow(clippy::needless_pass_by_value)]
-fn second(input: Vec<Dimensions>) -> u32 {
+fn second(input: &[Dimensions]) -> u32 {
     input.iter().fold(0, |total, dimensions| {
         let Dimensions {
             length,
@@ -79,19 +76,13 @@ fn main() {
 mod tests {
     #[test]
     fn first() {
-        let parsed = super::parse("2x3x4".to_owned());
-        assert_eq!(super::first(parsed), 58);
-
-        let parsed = super::parse("1x1x10".to_owned());
-        assert_eq!(super::first(parsed), 43);
+        advent_of_code::assert_first!("2x3x4", 58);
+        advent_of_code::assert_first!("1x1x10", 43);
     }
 
     #[test]
     fn second() {
-        let parsed = super::parse("2x3x4".to_owned());
-        assert_eq!(super::second(parsed), 34);
-
-        let parsed = super::parse("1x1x10".to_owned());
-        assert_eq!(super::second(parsed), 14);
+        advent_of_code::assert_second!("2x3x4", 34);
+        advent_of_code::assert_second!("1x1x10", 14);
     }
 }

@@ -117,22 +117,27 @@ impl Md5 {
     }
 }
 
-#[allow(clippy::needless_pass_by_value)]
-fn parse(input: String) -> impl Fn(u32) -> String + Clone {
-    move |number| format!("{input}{number}")
+struct Secret(String);
+
+impl Secret {
+    fn followed_by(&self, decimal: u32) -> String {
+        Md5::from_str(&format!("{}{}", self.0, decimal)).hash()
+    }
 }
 
-#[allow(clippy::needless_pass_by_value)]
-fn first(input: impl Fn(u32) -> String + 'static) -> u32 {
+fn parse(input: &str) -> Secret {
+    Secret(input.to_string())
+}
+
+fn first(input: &Secret) -> u32 {
     (0..u32::MAX)
-        .find(|&index| Md5::from_str(&input(index)).hash().starts_with("00000"))
+        .find(|&index| input.followed_by(index).starts_with("00000"))
         .expect("No input results in a hash with a prefix of '00000' (5 zeros)")
 }
 
-#[allow(clippy::needless_pass_by_value)]
-fn second(input: impl Fn(u32) -> String + 'static) -> u32 {
+fn second(input: &Secret) -> u32 {
     (0..u32::MAX)
-        .find(|&index| Md5::from_str(&input(index)).hash().starts_with("000000"))
+        .find(|&index| input.followed_by(index).starts_with("000000"))
         .expect("No input results in a hash with a prefix of '000000' (6 zeros)")
 }
 
@@ -144,10 +149,7 @@ fn main() {
 mod tests {
     #[test]
     fn first() {
-        let parsed = super::parse("abcdef".to_owned());
-        assert_eq!(super::first(parsed), 609_043);
-
-        let parsed = super::parse("pqrstuv".to_owned());
-        assert_eq!(super::first(parsed), 1_048_970);
+        advent_of_code::assert_first!("abcdef", 609_043);
+        advent_of_code::assert_first!("pqrstuv", 1_048_970);
     }
 }
