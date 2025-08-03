@@ -1,10 +1,12 @@
-module Day1 (parse, first) where
+module Day1 (parse, first, second) where
 
 import AdventOfCode ((#?))
-import Control.Arrow ((&&&))
+import Control.Monad (foldM)
 import Data.Function (on)
+import Data.Set (Set)
 import Data.Text (Text)
 
+import Data.Set qualified as Set
 import Data.Text qualified as Text
 import Data.Text.Read qualified as Text
 
@@ -18,7 +20,7 @@ data Instruction = Instruction {rotation :: Rotation, amount :: Int}
     deriving stock (Show)
 
 data Position = Position {x :: Int, y :: Int}
-    deriving stock (Show)
+    deriving stock (Eq, Ord, Show)
 
 parse :: Text -> [Instruction]
 parse = fmap parseInstruction . Text.splitOn ", "
@@ -35,28 +37,55 @@ parse = fmap parseInstruction . Text.splitOn ", "
                 parseRotation 'R' = Just R
                 parseRotation _invalidRotation = Nothing
 
+rotate :: Direction -> Rotation -> Direction
+rotate (fromEnum -> direction) =
+    toEnum . abs . \case
+        R -> (direction + 1) `mod` bound
+        L -> (direction - 1) `mod` bound
+    where
+        bound :: Int
+        bound = fromEnum (maxBound @Direction) + 1
+
+transpose :: Direction -> Int -> Position -> Position
+transpose North amount position@(Position _ y) = position {y = y + amount}
+transpose East amount position@(Position x _) = position {x = x + amount}
+transpose South amount position@(Position _ y) = position {y = y - amount}
+transpose West amount position@(Position x _) = position {x = x - amount}
+
+startingPoint :: (Position, Direction)
+startingPoint = (Position 0 0, North)
+
+distanceFromStartingPoint :: Position -> Int
+distanceFromStartingPoint Position {..} = ((+) `on` abs) x y
+
 first :: [Instruction] -> Int
 first =
-    (\(Position {..}) -> ((+) `on` abs) x y)
+    distanceFromStartingPoint
         . fst
-        . foldl' moveByInstruction (Position 0 0, North)
+        . foldl' stepByInstruction startingPoint
     where
-        moveByInstruction :: (Position, Direction) -> Instruction -> (Position, Direction)
-        moveByInstruction (position, direction) instruction =
-            move position (amount instruction) &&& id
-                $ rotate direction (rotation instruction)
+        stepByInstruction :: (Position, Direction) -> Instruction -> (Position, Direction)
+        stepByInstruction (position, direction) Instruction {..} = (newPosition, newDirection)
             where
-                move :: Position -> Int -> Direction -> Position
-                move position@(Position _ y) amount North = position {y = y + amount}
-                move position@(Position x _) amount East = position {x = x + amount}
-                move position@(Position _ y) amount South = position {y = y - amount}
-                move position@(Position x _) amount West = position {x = x - amount}
+                newDirection = rotate direction rotation
+                newPosition = transpose newDirection amount position
 
-                rotate :: Direction -> Rotation -> Direction
-                rotate (fromEnum -> direction) =
-                    toEnum . abs . \case
-                        R -> (direction + 1) `mod` bound
-                        L -> (direction - 1) `mod` bound
-                    where
-                        bound :: Int
-                        bound = fromEnum (maxBound @Direction) + 1
+second :: [Instruction] -> Int
+second =
+    distanceFromStartingPoint
+        . either id (fst . fst)
+        . foldM stepTrackingPath (startingPoint, Set.empty)
+    where
+        stepTrackingPath :: ((Position, Direction), Set Position) -> Instruction -> Either Position ((Position, Direction), Set Position)
+        stepTrackingPath ((position, direction), visited) Instruction {..}
+            | not $ Set.null pathIntersections = Left $ Set.elemAt 0 pathIntersections
+            | otherwise = Right ((transpose newDirection amount position, newDirection), Set.union visited pathToPosition)
+            where
+                newDirection :: Direction
+                newDirection = rotate direction rotation
+
+                pathToPosition :: Set Position
+                pathToPosition = Set.fromList . take amount $ iterate (transpose newDirection 1) position
+
+                pathIntersections :: Set Position
+                pathIntersections = Set.intersection pathToPosition visited
