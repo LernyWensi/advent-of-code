@@ -1,6 +1,6 @@
 module Day1 (parse, first) where
 
-import AdventOfCode ((#!), (#?))
+import AdventOfCode ((#?))
 import Control.Arrow ((&&&))
 import Data.Function (on)
 import Data.Text (Text)
@@ -27,7 +27,7 @@ parse = fmap parseInstruction . Text.splitOn ", "
         parseInstruction instruction = do
             let (rotation, amount) = Text.uncons instruction #? "The instruction must specify the rotation; instruction " <> show instruction <> " is incorrect."
                 rotation' = parseRotation rotation #? "The instruction can only specify 'L' or 'R' for rotation; instruction " <> show instruction <> " is incorrect."
-                (amount', _) = Text.decimal amount #! "An invalid amount " <> show amount <> " has been specified for the instruction " <> show instruction <> "."
+                (amount', _) = Text.decimal amount #? "An invalid amount " <> show amount <> " has been specified for the instruction " <> show instruction <> "."
              in Instruction rotation' amount'
             where
                 parseRotation :: Char -> Maybe Rotation

@@ -21,16 +21,10 @@ common language
     RecordWildCards
     ViewPatterns
 
-common depends
-  build-depends:
-    base ^>=4.21.0.0,
-    text ^>=2.1.2,
-
 executable advent-of-code
   import:
     warnings,
     language,
-    depends
 
   hs-source-dirs:
     bin
@@ -39,13 +33,15 @@ executable advent-of-code
     Main.hs
 
   build-depends:
+    base
+
+  build-depends:
     advent-of-code
 
 library
   import:
     warnings,
     language,
-    depends
 
   hs-source-dirs:
     src
@@ -54,11 +50,15 @@ library
     AdventOfCode
     Day1
 
+  build-depends:
+    base,
+    containers,
+    text,
+
 test-suite spec
   import:
     warnings,
     language,
-    depends
 
   type:
     exitcode-stdio-1.0
@@ -73,10 +73,9 @@ test-suite spec
     Day1Spec
 
   build-depends:
-    QuickCheck ^>=2.15.0.1,
     advent-of-code,
-    base ^>=4.21.0.0,
-    hspec ^>=2.11.12,
+    base,
+    hspec,
 
   build-tool-depends:
-    hspec-discover:hspec-discover >=2 && <3
+    hspec-discover:hspec-discover
