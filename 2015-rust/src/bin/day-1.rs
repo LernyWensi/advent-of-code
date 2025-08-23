@@ -1,8 +1,8 @@
-#![feature(string_into_chars)]
-
 use std::ops::ControlFlow;
 
-#[derive(Clone, Debug)]
+use advent_of_code::solve;
+
+#[derive(Debug)]
 enum Direction {
     Up,
     Down,
@@ -20,61 +20,74 @@ impl From<char> for Direction {
     }
 }
 
+#[derive(Default, Debug)]
+struct Floor(i32);
+
+impl Floor {
+    const fn traverse(mut self, direction: &Direction) -> Self {
+        match direction {
+            Direction::Up => self.0 += 1,
+            Direction::Down => self.0 -= 1,
+        }
+        self
+    }
+
+    const fn is_basement(&self) -> bool {
+        self.0 < 0
+    }
+}
+
 fn parse(input: &str) -> Vec<Direction> {
     input.chars().map(Direction::from).collect()
 }
 
-fn first(input: &[Direction]) -> i32 {
-    input
-        .iter()
-        .fold(0, |floor, instruction| match instruction {
-            Direction::Up => floor + 1,
-            Direction::Down => floor - 1,
-        })
+fn first(input: &[Direction]) -> Option<i32> {
+    Some(input.iter().fold(Floor::default(), Floor::traverse).0)
 }
 
-fn second(input: &[Direction]) -> i32 {
-    input
-        .iter()
-        .try_fold((0, 0), |(floor, position), instruction| {
-            let floor = match instruction {
-                Direction::Up => floor + 1,
-                Direction::Down => floor - 1,
-            };
-            let position = position + 1;
+fn second(input: &[Direction]) -> Option<i32> {
+    Some(
+        input
+            .iter()
+            .try_fold((Floor::default(), 0), |(floor, position), direction| {
+                let floor = floor.traverse(direction);
+                let position = position + 1;
 
-            if floor == -1 {
-                ControlFlow::Break(position)
-            } else {
-                ControlFlow::Continue((floor, position))
-            }
-        })
-        .break_value()
-        .expect("No break value found; the input did not lead to the basement")
+                if floor.is_basement() {
+                    ControlFlow::Break(position)
+                } else {
+                    ControlFlow::Continue((floor, position))
+                }
+            })
+            .break_value()
+            .expect("No break value found; the input did not lead to the basement"),
+    )
 }
 
 fn main() {
-    advent_of_code::solve(parse, Some(first), Some(second));
+    solve(parse, first, second);
 }
 
 #[cfg(test)]
 mod tests {
+    use advent_of_code::{assert_first, assert_second};
+
     #[test]
     fn first() {
-        advent_of_code::assert_first!("(())", 0);
-        advent_of_code::assert_first!("()()", 0);
-        advent_of_code::assert_first!("(((", 3);
-        advent_of_code::assert_first!("(()(()(", 3);
-        advent_of_code::assert_first!("))(((((", 3);
-        advent_of_code::assert_first!("())", -1);
-        advent_of_code::assert_first!("))(", -1);
-        advent_of_code::assert_first!(")))", -3);
-        advent_of_code::assert_first!(")())())", -3);
+        assert_first!("(())", Some(0));
+        assert_first!("()()", Some(0));
+        assert_first!("(((", Some(3));
+        assert_first!("(()(()(", Some(3));
+        assert_first!("))(((((", Some(3));
+        assert_first!("())", Some(-1));
+        assert_first!("))(", Some(-1));
+        assert_first!(")))", Some(-3));
+        assert_first!(")())())", Some(-3));
     }
 
     #[test]
     fn second() {
-        advent_of_code::assert_second!(")", 1);
-        advent_of_code::assert_second!("()())", 5);
+        assert_second!(")", Some(1));
+        assert_second!("()())", Some(5));
     }
 }

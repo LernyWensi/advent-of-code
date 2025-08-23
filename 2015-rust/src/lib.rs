@@ -15,15 +15,14 @@ impl fmt::Display for Part {
 }
 
 impl Part {
-    fn solve<Input, Solution>(&self, solver: Option<impl Fn(&Input) -> Solution>, input: &Input)
+    fn solve<Input, Solution>(&self, solver: impl Fn(&Input) -> Option<Solution>, input: &Input)
     where
         Input: ?Sized,
         Solution: fmt::Debug,
     {
-        let s = solver.map(|solver| solver(input));
         println!(
             "Part #{self}: {solution:?}",
-            solution = s
+            solution = solver(input)
                 .as_ref()
                 .map_or(&"Not solved" as &dyn fmt::Debug, |solution| solution)
         );
@@ -32,8 +31,8 @@ impl Part {
 
 pub fn solve<Parsed, Input, Solution>(
     parse: impl Fn(&str) -> Parsed,
-    first: Option<impl Fn(&Input) -> Solution>,
-    second: Option<impl Fn(&Input) -> Solution>,
+    first: impl Fn(&Input) -> Option<Solution>,
+    second: impl Fn(&Input) -> Option<Solution>,
 ) where
     Parsed: Borrow<Input>,
     Input: ?Sized,

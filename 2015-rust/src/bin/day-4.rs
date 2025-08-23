@@ -2,6 +2,8 @@
 
 use std::fmt::Write;
 
+use advent_of_code::solve;
+
 #[derive(Debug)]
 struct Md5(Vec<u8>);
 
@@ -129,27 +131,33 @@ fn parse(input: &str) -> Secret {
     Secret(input.to_string())
 }
 
-fn first(input: &Secret) -> u32 {
-    (0..u32::MAX)
-        .find(|&index| input.followed_by(index).starts_with("00000"))
-        .expect("No input results in a hash with a prefix of '00000' (5 zeros)")
+fn first(input: &Secret) -> Option<u32> {
+    Some(
+        (0..u32::MAX)
+            .find(|&index| input.followed_by(index).starts_with("00000"))
+            .expect("No input results in a hash with a prefix of '00000' (5 zeros)"),
+    )
 }
 
-fn second(input: &Secret) -> u32 {
-    (0..u32::MAX)
-        .find(|&index| input.followed_by(index).starts_with("000000"))
-        .expect("No input results in a hash with a prefix of '000000' (6 zeros)")
+fn second(input: &Secret) -> Option<u32> {
+    Some(
+        (0..u32::MAX)
+            .find(|&index| input.followed_by(index).starts_with("000000"))
+            .expect("No input results in a hash with a prefix of '000000' (6 zeros)"),
+    )
 }
 
 fn main() {
-    advent_of_code::solve(parse, Some(first), Some(second));
+    solve(parse, first, second);
 }
 
 #[cfg(test)]
 mod tests {
+    use advent_of_code::assert_first;
+
     #[test]
     fn first() {
-        advent_of_code::assert_first!("abcdef", 609_043);
-        advent_of_code::assert_first!("pqrstuv", 1_048_970);
+        assert_first!("abcdef", Some(609_043));
+        assert_first!("pqrstuv", Some(1_048_970));
     }
 }

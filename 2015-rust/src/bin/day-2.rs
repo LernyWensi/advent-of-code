@@ -1,8 +1,10 @@
+use advent_of_code::solve;
+
 #[derive(Clone, Debug)]
 struct Dimensions {
-    length: u32,
     width: u32,
     height: u32,
+    length: u32,
 }
 
 impl From<&str> for Dimensions {
@@ -16,9 +18,9 @@ impl From<&str> for Dimensions {
         };
 
         Self {
-            length,
             width,
             height,
+            length,
         }
     }
 }
@@ -27,8 +29,8 @@ fn parse(input: &str) -> Vec<Dimensions> {
     input.lines().map(Dimensions::from).collect()
 }
 
-fn first(input: &[Dimensions]) -> u32 {
-    input.iter().fold(0, |total, dimensions| {
+fn first(input: &[Dimensions]) -> Option<u32> {
+    Some(input.iter().fold(0, |total, dimensions| {
         let Dimensions {
             length,
             width,
@@ -47,11 +49,11 @@ fn first(input: &[Dimensions]) -> u32 {
                 .iter()
                 .min()
                 .expect("Failed to find the minimum area; dimensions may be invalid"))
-    })
+    }))
 }
 
-fn second(input: &[Dimensions]) -> u32 {
-    input.iter().fold(0, |total, dimensions| {
+fn second(input: &[Dimensions]) -> Option<u32> {
+    Some(input.iter().fold(0, |total, dimensions| {
         let Dimensions {
             length,
             width,
@@ -65,24 +67,26 @@ fn second(input: &[Dimensions]) -> u32 {
                 .map(|value| value * 2)
                 .min()
                 .expect("Failed to determine the minimum perimeter of one of the faces"))
-    })
+    }))
 }
 
 fn main() {
-    advent_of_code::solve(parse, Some(first), Some(second));
+    solve(parse, first, second);
 }
 
 #[cfg(test)]
 mod tests {
+    use advent_of_code::{assert_first, assert_second};
+
     #[test]
     fn first() {
-        advent_of_code::assert_first!("2x3x4", 58);
-        advent_of_code::assert_first!("1x1x10", 43);
+        assert_first!("2x3x4", Some(58));
+        assert_first!("1x1x10", Some(43));
     }
 
     #[test]
     fn second() {
-        advent_of_code::assert_second!("2x3x4", 34);
-        advent_of_code::assert_second!("1x1x10", 14);
+        assert_second!("2x3x4", Some(34));
+        assert_second!("1x1x10", Some(14));
     }
 }

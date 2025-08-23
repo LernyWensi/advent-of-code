@@ -16,12 +16,18 @@ common language
 
   default-extensions:
     BlockArguments
+    DerivingStrategies
+    DuplicateRecordFields
+    LexicalNegation
+    MultilineStrings
+    OrPatterns
     OverloadedStrings
     PatternSynonyms
     RecordWildCards
+    Strict
     ViewPatterns
 
-executable advent-of-code
+common day
   import:
     warnings,
     language,
@@ -29,14 +35,9 @@ executable advent-of-code
   hs-source-dirs:
     bin
 
-  main-is:
-    Main.hs
-
   build-depends:
-    base
-
-  build-depends:
-    advent-of-code
+    advent-of-code,
+    base,
 
 library
   import:
@@ -47,12 +48,23 @@ library
     src
 
   exposed-modules:
-    AdventOfCode
-    Day1
+    Bin.Day1
+    Bin.Day2
+    Bin.Day3
+
+  other-modules:
+    Data.List.Extended
+    Data.Text.Read.Extended
+    Day
+    Direction
+    Fail
+    Linear.V2.Extended
+    Rotation
 
   build-depends:
     base,
     containers,
+    linear,
     text,
 
 test-suite spec
@@ -71,6 +83,8 @@ test-suite spec
 
   other-modules:
     Day1Spec
+    Day2Spec
+    Day3Spec
 
   build-depends:
     advent-of-code,
@@ -79,3 +93,15 @@ test-suite spec
 
   build-tool-depends:
     hspec-discover:hspec-discover
+
+executable day-1
+  import: day
+  main-is: Day1.hs
+
+executable day-2
+  import: day
+  main-is: Day2.hs
+
+executable day-3
+  import: day
+  main-is: Day3.hs
