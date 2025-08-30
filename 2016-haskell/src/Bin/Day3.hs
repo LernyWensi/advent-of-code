@@ -34,7 +34,7 @@ parse =
         . Text.lines
     where
         parseTriangle :: [Text] -> (Int, Int, Int)
-        parseTriangle list = asTriangle $ traverse Text.decimal' list #? "Triangle vertex values must be valid decimal numbers; got " <> show list
+        parseTriangle list = asTriangle $ traverse Text.decimal' list #? "Triangle vertex values must be a valid decimal numbers; got " <> show list
 
 first :: [(Int, Int, Int)] -> Maybe Int
 first = Just . countPossibleTriangles

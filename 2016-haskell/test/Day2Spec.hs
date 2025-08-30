@@ -2,15 +2,14 @@ module Day2Spec (
     spec,
 ) where
 
-import Test.Hspec
-
-import Bin.Day2 qualified as Day2
+import Bin.Day2 (first, parse, second)
+import Test.Hspec (SpecWith, it, shouldBe)
 
 spec :: SpecWith ()
 spec = do
     it "First Part" do
-        Day2.first
-            ( Day2.parse
+        first
+            ( parse
                 """
                 ULL
                 RRDDD
@@ -21,8 +20,8 @@ spec = do
             `shouldBe` Just "1985"
 
     it "Second Part" do
-        Day2.second
-            ( Day2.parse
+        second
+            ( parse
                 """
                 ULL
                 RRDDD
