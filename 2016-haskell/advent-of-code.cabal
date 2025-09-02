@@ -52,12 +52,13 @@ library
     Bin.Day2
     Bin.Day3
     Bin.Day4
+    Bin.Day5
 
   other-modules:
+    Data.Char.Extended
     Data.List.Extended
     Data.Text.Extended
     Data.Text.Read.Extended
-    Data.Char.Extended
     Day
     Direction
     Fail
@@ -68,6 +69,7 @@ library
     base,
     containers,
     linear,
+    pureMD5,
     text,
 
 test-suite spec
@@ -89,6 +91,7 @@ test-suite spec
     Day2Spec
     Day3Spec
     Day4Spec
+    Day5Spec
 
   build-depends:
     advent-of-code,
@@ -113,3 +116,7 @@ executable day-3
 executable day-4
   import: day
   main-is: Day4.hs
+
+executable day-5
+  import: day
+  main-is: Day5.hs

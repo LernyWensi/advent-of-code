@@ -1,6 +1,7 @@
 module Data.Char.Extended (
     module Data.Char,
     shift,
+    maybeDigitToInt,
 ) where
 
 import Data.Char
@@ -16,3 +17,8 @@ shift amount char
             where
                 alphabetSize :: Int
                 alphabetSize = 26
+
+maybeDigitToInt :: Char -> Maybe Int
+maybeDigitToInt char
+    | isDigit char = Just $ digitToInt char
+    | otherwise = Nothing
