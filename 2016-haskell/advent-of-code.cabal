@@ -53,6 +53,7 @@ library
     Bin.Day3
     Bin.Day4
     Bin.Day5
+    Bin.Day6
 
   other-modules:
     Data.Char.Extended
@@ -92,6 +93,7 @@ test-suite spec
     Day3Spec
     Day4Spec
     Day5Spec
+    Day6Spec
 
   build-depends:
     advent-of-code,
@@ -120,3 +122,7 @@ executable day-4
 executable day-5
   import: day
   main-is: Day5.hs
+
+executable day-6
+  import: day
+  main-is: Day6.hs
