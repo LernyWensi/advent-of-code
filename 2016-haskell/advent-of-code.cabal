@@ -54,11 +54,13 @@ library
     Bin.Day4
     Bin.Day5
     Bin.Day6
+    Bin.Day7
 
   other-modules:
     Data.Char.Extended
     Data.List.Extended
     Data.Text.Extended
+    Data.Bifunctor.Extended
     Data.Text.Read.Extended
     Day
     Direction
@@ -94,6 +96,7 @@ test-suite spec
     Day4Spec
     Day5Spec
     Day6Spec
+    Day7Spec
 
   build-depends:
     advent-of-code,
@@ -126,3 +129,7 @@ executable day-5
 executable day-6
   import: day
   main-is: Day6.hs
+
+executable day-7
+  import: day
+  main-is: Day7.hs
