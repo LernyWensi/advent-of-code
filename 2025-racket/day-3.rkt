@@ -27,7 +27,7 @@
               (define-values (bank-joltage _)
                   (for/fold ([bank-joltage 0]
                              [bank (map char->number (string->list bank))])
-                            ([batteries-to-turn-on (in-range 11 -1 -1)])
+                            ([batteries-to-turn-on (in-inclusive-range 11 0 -1)])
                             (define-values (batteries-pool batteries-rest) (split-at bank (- (length bank) batteries-to-turn-on)))
                             (define highest-joltage-battery (apply max batteries-pool))
                             (define batteries-pool-rest (rest (member highest-joltage-battery bank)))

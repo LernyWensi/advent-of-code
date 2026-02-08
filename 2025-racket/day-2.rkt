@@ -17,7 +17,7 @@
               (match-define (id-range min-bound max-bound) an-id-range)
               (+ invalid-ids-sum
                  (for/fold ([sum 0])
-                           ([number (in-range min-bound (add1 max-bound))])
+                           ([number (in-inclusive-range min-bound max-bound)])
                            (define number-digits (number->string number))
                            (define number-width (string-length number-digits))
                            (if (and (even? number-width)
@@ -30,11 +30,11 @@
               (match-define (id-range min-bound max-bound) an-id-range)
               (+ invalid-ids-sum
                  (for/fold ([sum 0])
-                           ([number (in-range min-bound (add1 max-bound))])
+                           ([number (in-inclusive-range min-bound max-bound)])
                            (define number-digits (number->string number))
                            (define number-width (string-length number-digits))
                            (for/fold ([sum-updated sum])
-                                     ([chunk-size (in-range 1 (add1 number-width))]
+                                     ([chunk-size (in-inclusive-range 1 number-width)]
                                       #:break (not (equal? sum-updated sum)))
                                      (if (and (zero? (modulo number-width chunk-size))
                                               (all? equal? (string->slices chunk-size number-digits) #:allow-single? #f))
