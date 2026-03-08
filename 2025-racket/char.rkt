@@ -3,5 +3,4 @@
 (provide char->number)
 
 (define (char->number char)
-    (- (char->integer char)
-       (char->integer #\0)))
+  (- (char->integer char) (char->integer #\0)))
